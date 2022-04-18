@@ -72,3 +72,24 @@ select * from dengue_cases;
 
 select * from temperature_rain;
 
+-- Switch over to Dataiku DSS
+
+-- Step 7.1 Switch to ml_workspace 
+use database ml_workspace;
+
+-- Step 7.2 Explore the Java UDF 
+show functions like 'nick%';
+describe function nick_test_function(object);
+
+-- Step 8.1 Exploring the test datasets
+select * from ML_WORKSPACE.PUBLIC.ML_DENGUEPREDICTIONNICK_TEST;
+
+-- Step 8.2 Preparing the UDF inputs
+select object_construct(*)
+from ML_WORKSPACE.PUBLIC.ML_DENGUEPREDICTIONNICK_TEST;
+
+-- Step 8.3 Let's try charting it out
+select *,
+"DENGUE CASES" as "Actual Dengue Cases", 
+nick_test_function(object_construct(*)):value.prediction::float as "Predicted Dengue Cases"
+from ML_WORKSPACE.PUBLIC.ML_DENGUEPREDICTIONNICK_TEST;
